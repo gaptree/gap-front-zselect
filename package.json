@@ -1,0 +1,19 @@
+{
+  "name": "gap-front-zselect",
+  "version": "1.0.1",
+  "keywords": [
+    "Gap",
+    "zselect"
+  ],
+  "author": "zhanjh",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://project.tecposter.cn/diffusion/36/gap-front-zselect.git"
+  },
+  "description": ""
+}
