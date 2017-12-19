@@ -12,7 +12,8 @@ class SelectedItemPlug extends Plug {
 
         this.view.selectedWrap.on('click', e => {
             if (e.target.className == 'delete') {
-                this.view.trigger('unSelect', e.target.parentElement._obj);
+                let targetObj = e.target.parentElement._obj; 
+                this.view.trigger('unSelect', targetObj.fillValue, targetObj);
             }
         });
 
@@ -32,13 +33,13 @@ class SelectedItemPlug extends Plug {
                 }
 
                 let obj = this.selectedStack[this.selectedIndex - 1];
-                this.view.trigger('unSelect', obj);
+                this.view.trigger('unSelect', obj.fillValue, obj);
             });
     }
 
     onSelect(obj) {
         if (this.create(obj)) {
-            this.view.trigger('selected', obj);
+            this.view.trigger('selected', obj.fillValue, obj);
         }
     }
 
@@ -58,7 +59,7 @@ class SelectedItemPlug extends Plug {
             this.view.input.style.width = '100%';
         }
 
-        this.view.trigger('unSelected', obj);
+        this.view.trigger('unSelected', obj.fillValue, obj);
     }
 
     onClear() {
