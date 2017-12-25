@@ -95,6 +95,7 @@ export class Zselect extends View {
     }
 
     onSelect() {
+        this.input.blur();
         //this.input.value = '';
         if (this.dropWrap.style.display == 'block') {
             this.trigger('query');
