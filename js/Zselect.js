@@ -1,9 +1,10 @@
-import {View} from 'zjs/base/View.js';
-import {tpl} from 'zjs/tpl';
-import {fillObj as fill} from 'zjs/str/fill-obj.js';
+import {View} from 'gap-front-base';
+import {tpl} from 'gap-front-fun';
+import {fillObj as fill} from './fill-obj.js';
 import {RequestPlug} from './plug/RequestPlug.js';
 import {DropItemPlug} from './plug/DropItemPlug.js';
 import {SelectedItemPlug} from './plug/SelectedItemPlug.js';
+import {Event} from 'gap-front-event';
 
 export class Zselect extends View {
     beforeRender() {
@@ -25,9 +26,12 @@ export class Zselect extends View {
         this.isMulti = this.data.isMulti;
 
         this.ctn.addClass('zselect');
+        this.event = new Event();
     }
 
     render() {
+        this.beforeRender();
+
         this.ctn.innerHTML = tpl`
             <div class="selected-wrap">
                 <input type="text"
@@ -65,8 +69,8 @@ export class Zselect extends View {
                     return;
                 }
 
-                e.stop();
-                e.cancel();
+                e.stopPropagation();
+                e.preventDefault();
                 this.input.blur();
             });
 
@@ -76,12 +80,21 @@ export class Zselect extends View {
             .on('select', () => this.onSelect());
 
         this.ctn.on('mousedown', (e) => {
-            e.cancel();
-            e.stop();
+            e.stopPropagation();
+            e.preventDefault();
             this.input.focus();
             return false;
         });
 
+    }
+
+    on(type, listener) {
+        this.event.on(type, listener);
+        return this;
+    }
+
+    trigger(type, ...args) {
+        this.event.trigger(type, ...args);
     }
 
     onFocus() {

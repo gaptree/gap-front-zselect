@@ -1,4 +1,4 @@
-import {Plug} from 'zjs/base/Plug.js';
+import {Plug} from './Plug.js';
 
 class DropItemPlug extends Plug {
     startup() {

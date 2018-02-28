@@ -1,5 +1,5 @@
-import {Plug} from 'zjs/base/Plug.js';
-import {RequestQueue} from 'zjs/http/request-queue/RequestQueue.js';
+import {Plug} from './Plug.js';
+import {RequestQueue} from 'gap-front-request';
 
 class RequestPlug extends Plug {
     startup() {
@@ -21,9 +21,9 @@ class RequestPlug extends Plug {
         }
 
         this.requestQueue = new RequestQueue({
-            srcUrl: this.view.srcUrl,
-            queryName: this.view.queryName,
-            send: this.view.args,
+            srcUrl: this.view.data.srcUrl,
+            queryName: this.view.data.queryName,
+            send: this.view.data.args,
         });
 
         this.requestQueue
