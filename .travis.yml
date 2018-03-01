@@ -1,4 +1,6 @@
-ilanguage: node_js
+sudo: false
+
+language: node_js
 node_js:
   - "8"
   - "7"
