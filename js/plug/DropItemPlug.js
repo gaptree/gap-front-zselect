@@ -131,9 +131,9 @@ class DropItemPlug extends Plug {
         a.href = 'javascript:;';
         if (query) {
             a.innerHTML = obj.fillContent.replace(
-                    new RegExp(query, 'ig'),
-                    '<strong>\$&</strong>'
-                );
+                new RegExp(query, 'ig'),
+                '<strong>$&</strong>'
+            );
         } else {
             a.innerHTML = obj.fillContent;
         }

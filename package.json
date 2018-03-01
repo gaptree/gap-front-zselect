@@ -9,11 +9,29 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run jest && npm run eslint",
+    "jest": "jest",
+    "eslint": "eslint ."
   },
   "repository": {
     "type": "git",
     "url": "https://project.tecposter.cn/diffusion/36/gap-front-zselect.git"
   },
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "gap-front-base": "^1.0.1",
+    "gap-front-event": "^1.0.0",
+    "gap-front-fun": "^1.0.5",
+    "gap-front-s": "^1.0.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.4.1",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.18.1",
+    "jest": "^22.4.2",
+    "node-sass": "^4.7.2",
+    "regenerator-runtime": "^0.11.1",
+    "sass-lint": "^1.12.1"
+  }
 }
