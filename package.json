@@ -19,10 +19,8 @@
   },
   "description": "",
   "dependencies": {
-    "gap-front-base": "^1.0.1",
-    "gap-front-event": "^1.0.0",
-    "gap-front-fun": "^1.0.5",
-    "gap-front-s": "^1.0.2"
+    "gap-front-view": "^1.0.2",
+    "gap-front-web": "^1.0.6"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

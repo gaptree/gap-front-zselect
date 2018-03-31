@@ -1,33 +1,17 @@
-import {tpl, scriptJson} from 'gap-front-fun';
 import {Zselect} from '../index.js';
 
 test('Zselect', () => {
-    const selectScriptJson = scriptJson({
-        name: 'channels',
-        srcUrl: '//www.gaptree.com',
-        queryName: 'q',
-        isMulti: true,
-        pattern: {
-            content: '#{title}',
-            selected: '#{title}',
-            value: '#{channelId};#{zcode};#{title}'
-        }
+    const select = new Zselect();
+
+    select.appendTo(document.body);
+
+    select.onInput(query => {
     });
 
-    document.body.innerHTML = tpl`
-        <div id="zselect">${selectScriptJson}</div>
-    `;
+    select.setItems([
+        {name: 'item1'},
+        {name: 'item2'}
+    ]);
 
-    new Zselect('#zselect');
-
-    expect(document.body.innerHTML).toBe(tpl`
-        <div id="zselect" class="zselect">
-            <div class="selected-wrap">
-                <input type="text" class="zinput">
-            </div>
-            <div class="drop-wrap">
-                <ul></ul>
-            </div>
-        </div>
-    `);
+    console.log(document.body.innerHTML);
 });
