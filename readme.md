@@ -1,24 +1,31 @@
-```
-yarn init
-yarn global add jest
-yarn add babel-core babel-jest babel-preset-env regenerator-runtime --dev
-```
+# Gap Front Zselect
+
+## Install
 
 ```
-yarn link jest eslint sass-lint node-sass babel-core babel-jest babel-preset-env regenerator-runtime --dev
+$ yarn add gap-front-zselect
 ```
 
+## Usage
 
-package.json
+```javascript
+import {Zselect} from 'gap-front-zselect';
+import {oneElem} from 'gap-front-web';
+import {userRepo} from '../../mock/userRepo.js';
+
+const select = new Zselect({
+    required: 'required',
+    name: 'userId',
+    isMulti: true,
+    pattern: {
+        content: '#{nick} (#{email})',
+        selected: '',
+        value: '#{userId}'
+    }
+});
+
+select.onInput(input => userRepo.query(input));
+userRepo.onLoad(users => select.showDropList(users));
+
+select.appendTo(oneElem('.zselect-container'));
 ```
-{
-
-  "scripts": {
-    "test": "npm run jest && npm run eslint",
-    "jest": "jest",
-    "eslint": "eslint ."
-  }
-
-}
-```
-
