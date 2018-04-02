@@ -1,4 +1,4 @@
-export function fillObj(pattern, item) {
+export const fillObj = (pattern, item) => {
     return pattern.replace(
         /#\{([a-zA-Z][.a-zA-Z0-9]*)\}/g,
         (str, p1) => {
@@ -12,4 +12,4 @@ export function fillObj(pattern, item) {
             return re || '';
         }
     );
-}
+};

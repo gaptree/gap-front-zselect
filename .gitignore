@@ -6,8 +6,7 @@
 .Spotlight-V100
 .Trashes
 
-**/_bk-*
-**/.bk-*
+*.bk
 **/*.map
 **/*.local.js
 

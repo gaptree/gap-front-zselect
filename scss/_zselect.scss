@@ -6,6 +6,10 @@ $menu-shadow: #dee9ef;
         min-height: 2.5rem;
         position: relative;
 
+        .selected-list {
+            display: inline;
+        }
+
         .zinput {
             background-color: inherit;
             border: 0;
