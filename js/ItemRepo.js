@@ -26,6 +26,11 @@ export class ItemRepo {
         };
     }
 
+    listSelectedItem() {
+        return Object.keys(this.data)
+            .map(key => this.getSelectedItem(key));
+    }
+
     listDropItem() {
         const dropItemArr = [];
 

@@ -2,22 +2,33 @@ import {View} from 'gap-front-view';
 import {Event} from 'gap-front-event';
 
 export class DropList extends View {
-    static get tag() { return 'ul'; }
+    static get tag() { return 'div'; }
+
+    render() {
+        this.ctn.addClass('drop-wrap');
+        this.ctn.style.position = 'relative';
+        this.ctn.innerHTML = '<ul></ul>';
+        this.ctn.hide();
+    }
 
     startup() {
         this.event = new Event();
 
+        this.list = this.ctn.oneElem('ul');
+        this.reg();
+        this.api();
+    }
+
+    reg() {
         this.ctn.on('click', (evt) => {
             if (evt.target.hasClass('drop-item')) {
                 this.triggerSelect(evt.target.getAttribute('key'));
             }
         });
-
-        this.exportApi();
     }
 
-    exportApi() {
-        this.ctn.showList = (itemArr) => this.showList(itemArr);
+    api() {
+        this.ctn.load = (itemArr) => this.load(itemArr);
         this.ctn.onSelect = (handler) => this.onSelect(handler);
         this.ctn.next = () => this.next();
         this.ctn.prev = () => this.prev();
@@ -28,8 +39,8 @@ export class DropList extends View {
         this.event.on('select', handler);
     }
 
-    showList(itemArr) {
-        this.ctn.html`
+    load(itemArr) {
+        this.list.html`
             ${itemArr.map(item => `
                 <li>
                     <a href="javascript:;" class="drop-item"
@@ -62,7 +73,7 @@ export class DropList extends View {
     }
 
     selectCurrent() {
-        const currentA = this.ctn.oneElem('.active .drop-item');
+        const currentA = this.list.oneElem('.active .drop-item');
         if (currentA) {
             this.triggerSelect(currentA.getAttribute('key'));
         }
@@ -78,15 +89,15 @@ export class DropList extends View {
     }
 
     getActiveLi() {
-        return this.ctn.oneElem('li.active');
+        return this.list.oneElem('li.active');
     }
 
     getFirstLi() {
-        return this.ctn.firstElementChild;
+        return this.list.firstElementChild;
     }
 
     getLastLi() {
-        return this.ctn.lastElementChild;
+        return this.list.lastElementChild;
     }
 
     triggerSelect(key) {

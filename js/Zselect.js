@@ -1,8 +1,8 @@
 import {View} from 'gap-front-view';
-import {Event} from 'gap-front-event';
 import {SelectedList} from './SelectedList.js';
 import {ItemRepo} from './ItemRepo.js';
 import {DropList} from './DropList.js';
+import {QueryEvent} from './QueryEvent.js';
 
 const KeyCode = {
     esc: 27,
@@ -21,31 +21,33 @@ export class Zselect extends View {
 
         this.ctn.html`
         <div class="selected-wrap">
-            ${this.view('selectedList', SelectedList, {name: this.data.name, isMulti: this.data.isMulti})}
+
+    ${this.view('selectedList', SelectedList, {
+        name: this.data.name,
+        isMulti: this.data.isMulti
+    })}
             <input type="text"
                 ${this.data.required ? 'required="required"' : ''}
                 ${this.data.placeholder ? ('placeholder=' + this.data.placeholder) : ''}
                 class="zinput">
         </div>
-        <div class="drop-wrap">
-            ${this.view('dropList', DropList)}
-        </div>
+        ${this.view('dropList', DropList)}
         `;
     }
 
     startup() {
         this.input = this.ctn.oneElem('.selected-wrap .zinput');
-        this.selectedWrap = this.ctn.oneElem('.selected-wrap');
-        this.dropWrap = this.ctn.oneElem('.drop-wrap');
-
         this.selectedList = this.get('selectedList');
         this.dropList = this.get('dropList');
 
         this.itemRepo = new ItemRepo(this.data.pattern);
-        this.event = new Event();
+        this.queryEvent = new QueryEvent();
 
-        this.dropWrap.style.position = 'relative';
+        this.reg();
+        this.api();
+    }
 
+    reg() {
         this.input
             .on('focus', () => this.focus())
             .on('blur', () => this.blur())
@@ -54,7 +56,7 @@ export class Zselect extends View {
 
         this.dropList.onSelect(key => {
             this.selectedList.addItem(this.itemRepo.getSelectedItem(key));
-            this.hideDropList();
+            this.dropList.hide();
             this.input.setVal('');
             this.input.blur();
         });
@@ -69,44 +71,46 @@ export class Zselect extends View {
             }
         });
 
-        this.exportApi();
     }
 
-    exportApi() {
+    api() {
         this.ctn.showDropList = (items) => this.showDropList(items);
-        this.ctn.onInput = (handler) => this.onInput(handler);
+        this.ctn.onQuery = (handler) => this.onQuery(handler);
+        this.ctn.setVal = (items) => this.setVal(items);
     }
 
-    onInput(handler) {
-        this.event.on('input', handler);
+    setVal(items) {
+        if (!Array.isArray(items)) {
+            items = [items];
+        }
+        this.itemRepo.load(items);
+        this.itemRepo.listSelectedItem().forEach(selectedItem => {
+            this.selectedList.addItem(selectedItem);
+        });
+    }
+
+    onQuery(handler) {
+        this.queryEvent.on(handler);
     }
 
     showDropList(items) {
         this.itemRepo.load(items);
-        this.showDropWrap();
-        this.dropList.showList(this.itemRepo.listDropItem());
-    }
-
-    triggerInput() {
-        const currentQuery = this.getQuery();
-        if (this._prevQuery !== currentQuery) {
-            this.event.trigger('input', currentQuery);
-            this._prevQuery = currentQuery;
-        }
+        this.dropList.show();
+        this.dropList.load(this.itemRepo.listDropItem());
     }
 
     focus() {
         this.adjustInputSize();
-        this.triggerInput();
-        this.showDropWrap();
+        this.queryEvent.trigger(this.getQuery());
+        this.dropList.show();
     }
 
     blur() {
-        this.hideDropList();
+        this.dropList.hide();
     }
 
     keyup() {
-        this.triggerInput();
+        this.queryEvent.trigger(this.getQuery());
     }
 
     keydown(evt) {
@@ -157,13 +161,5 @@ export class Zselect extends View {
 
     adjustInputSize() {
         this.input.style.width = (this.input.value.length + 1) * 10 + 24 + 'px';
-    }
-
-    showDropWrap() {
-        this.dropWrap.style.display = 'block';
-    }
-
-    hideDropList() {
-        this.dropWrap.style.display = 'none';
     }
 }
