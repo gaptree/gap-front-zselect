@@ -6,7 +6,7 @@ export class DropList extends View {
 
     render() {
         this.ctn.addClass('drop-wrap');
-        this.ctn.style.position = 'relative';
+        this.ctn.style.position = 'absolute';
         this.ctn.innerHTML = '<ul></ul>';
         this.ctn.hide();
     }
