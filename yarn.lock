@@ -1785,6 +1785,10 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
 
+gap-front-event@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/gap-front-event/-/gap-front-event-1.0.2.tgz#40e34baaec5736845ecfdac8d9a53aad5f5b0613"
+
 gap-front-view@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/gap-front-view/-/gap-front-view-1.0.3.tgz#ac0dfb9be4fd4a8938ff1360a0dfeed86126bd25"
