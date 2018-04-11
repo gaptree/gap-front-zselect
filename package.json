@@ -19,7 +19,7 @@
   },
   "description": "",
   "dependencies": {
-    "gap-front-event": "^1.0.2",
+    "gap-front-event": "^2.0.0",
     "gap-front-view": "^1.0.2",
     "gap-front-web": "^1.0.6"
   },

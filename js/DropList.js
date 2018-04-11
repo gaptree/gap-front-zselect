@@ -1,5 +1,5 @@
 import {View} from 'gap-front-view';
-import {Event} from 'gap-front-event';
+import {GapEvent} from 'gap-front-event';
 
 export class DropList extends View {
     static get tag() { return 'div'; }
@@ -12,7 +12,7 @@ export class DropList extends View {
     }
 
     startup() {
-        this.event = new Event();
+        this.event = new GapEvent();
 
         this.list = this.ctn.oneElem('ul');
         this.reg();

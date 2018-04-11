@@ -1,8 +1,8 @@
-import {Event} from 'gap-front-event';
+import {GapEvent} from 'gap-front-event';
 
 export class QueryEvent {
     constructor() {
-        this.event = new Event();
+        this.event = new GapEvent();
     }
 
     on(handler) {
