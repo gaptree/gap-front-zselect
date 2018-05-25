@@ -20,8 +20,8 @@
   "description": "",
   "dependencies": {
     "gap-front-event": "^2.0.0",
-    "gap-front-view": "^1.0.2",
-    "gap-front-web": "^1.0.6"
+    "gap-front-view": "^2.1.0",
+    "gap-front-web": "^1.2.11"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
