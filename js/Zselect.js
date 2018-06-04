@@ -1,8 +1,8 @@
 import {View} from 'gap-front-view';
-import {SelectedList} from './SelectedList.js';
-import {ItemRepo} from './ItemRepo.js';
-import {DropList} from './DropList.js';
-import {QueryEvent} from './QueryEvent.js';
+import {SelectedList} from './SelectedList';
+import {DropList} from './DropList';
+import {ItemRepo} from './ItemRepo';
+import {fillObj} from './fillObj';
 
 const KeyCode = {
     esc: 27,
@@ -13,110 +13,115 @@ const KeyCode = {
 };
 
 export class Zselect extends View {
-
-    static get tag() { return 'div'; }
-
-    render() {
-        this.ctn.addClass('zselect');
-
-        this.ctn.html`
-        <div class="selected-wrap">
-
-    ${this.view('selectedList', SelectedList, {
-        name: this.data.name,
-        isMulti: this.data.isMulti
-    })}
-            <input type="text"
-                ${this.data.required ? 'required="required"' : ''}
-                ${this.data.placeholder ? ('placeholder=' + this.data.placeholder) : ''}
-                class="zinput">
+    template() {
+        return this.html`
+        <div class="zselect"
+            on-mousedown=${evt => this.mousedown(evt)}
+        >
+            <div class="selected-wrap">
+                <gap-view
+                    view=${new SelectedList(this.data)}
+                    ref=${view => this.selectedList = view}
+                    bind="selectedList"
+                ></gap-view>
+                <input
+                    type="text"
+                    class="zinput"
+                    ref=${input => this.input = input}
+                    on-focus=${() => this.focus()}
+                    on-blur=${() => this.blur()}
+                    on-keyup=${evt => this.keyup(evt)}
+                    on-keydown=${(evt) => this.keydown(evt)}
+                    bind-required="required"
+                    bind-placeholder="placeholder"
+                >
+            </div>
+            <gap-view
+                view=${new DropList()}
+                ref=${view => this.dropList = view}
+                bind="dropList"
+                on-select=${key => this.select(key)}
+            ></gap-view>
         </div>
-        ${this.view('dropList', DropList)}
         `;
     }
 
-    startup() {
-        this.input = this.ctn.oneElem('.selected-wrap .zinput');
-        this.selectedList = this.get('selectedList');
-        this.dropList = this.get('dropList');
-
-        this.itemRepo = new ItemRepo(this.data.pattern);
-        this.queryEvent = new QueryEvent();
-
-        this.reg();
-        this.api();
+    onQuery(handle) {
+        this.handleQuery = handle;
     }
 
-    reg() {
-        this.input
-            .on('focus', () => this.focus())
-            .on('blur', () => this.blur())
-            .on('keyup', (e) => this.keyup(e))
-            .on('keydown', (e) => this.keydown(e));
-
-        this.dropList.onSelect(key => {
-            this.selectedList.addItem(this.itemRepo.getSelectedItem(key));
-            this.dropList.hide();
-            this.input.setVal('');
-            this.input.blur();
-        });
-
-
-        this.ctn.on('mousedown', (evt) => {
-            if (evt.target !== this.input) {
-                evt.cancel();
-                evt.stop();
-                this.input.focus();
-                return false;
-            }
-        });
-
-    }
-
-    api() {
-        this.ctn.showDropList = (items) => this.showDropList(items);
-        this.ctn.onQuery = (handler) => this.onQuery(handler);
-        this.ctn.setVal = (items) => this.setVal(items);
-    }
-
-    setVal(items) {
-        if (!Array.isArray(items)) {
-            items = [items];
+    async querying() {
+        console.log('try querying');
+        const query = this.getQuery();
+        if (this.currentQuery === query) {
+            return;
         }
-        this.itemRepo.load(items);
-        this.itemRepo.listSelectedItem().forEach(selectedItem => {
-            this.selectedList.addItem(selectedItem);
+        
+        console.log('querying', query);
+        this.currentQuery = query;
+        const response = this.handleQuery(query);
+
+        this.items = (response instanceof Promise) ?
+            (await response) : response;
+
+        this.dropList.show();
+        this.dropList.update({
+            items: this.items.map((item, index) => {
+                return {
+                    key: 'k' + index,
+                    content: fillObj(this.data.pattern.content, item)
+                };
+            })
         });
     }
 
-    onQuery(handler) {
-        this.queryEvent.on(handler);
+    select(key) {
+        const index = parseInt(key.substr(1));
+        const item = this.items[index];
+
+        const selectedPattern = this.data.pattern.selected || this.data.pattern.content;
+
+        this.selectedList.addItem({
+            value: fillObj(this.data.pattern.value, item),
+            selected: fillObj(selectedPattern, item),
+            key: key
+        });
+
+        this.dropList.hide();
+        this.input.setVal('');
+        this.currentQuery = null;
+        this.input.blur();
     }
 
-    showDropList(items) {
-        this.itemRepo.load(items);
-        this.dropList.show();
-        this.dropList.load(this.itemRepo.listDropItem());
+    mousedown(evt) {
+        if (evt.target === this.input) {
+            return;
+        }
+
+        evt.cancel();
+        evt.stop();
+        this.input.focus();
+        return false;
     }
 
     focus() {
         this.adjustInputSize();
-        this.queryEvent.trigger(this.getQuery());
-        this.dropList.show();
-    }
-
-    blur() {
-        this.dropList.hide();
+        this.querying();
+        //this.dropList.show();
     }
 
     keyup() {
-        this.queryEvent.trigger(this.getQuery());
+        if (!this.blockQuerying) {
+            this.querying();
+        }
     }
 
     keydown(evt) {
         this.adjustInputSize();
+        this.blockQuerying = false;
 
         const blockEvt = e => {
+            this.blockQuerying = true;
             e.stop();
             e.cancel();
         };
@@ -124,42 +129,50 @@ export class Zselect extends View {
         if (evt.keyCode === KeyCode.esc) {
             this.input.blur();
             blockEvt(evt);
-            return;
+            return false;
         }
 
         if (evt.keyCode === KeyCode.up) {
             this.dropList.prev();
             blockEvt(evt);
-            return;
+            return false;
         }
 
         if (evt.keyCode === KeyCode.down) {
             this.dropList.next();
             blockEvt(evt);
-            return;
+            return false;
         }
 
         if (evt.keyCode === KeyCode.enter) {
             this.dropList.selectCurrent();
             blockEvt(evt);
-            return;
+            return false;
         }
 
         if (evt.keyCode === KeyCode.delete) {
             if (!this.getQuery()) {
                 this.selectedList.deleteLast();
                 blockEvt(evt);
-                return;
+                return false;
             }
         }
     }
 
-    // protected functions
-    getQuery() {
-        return this.input.value.trim();
+    blur() {
+        this.dropList.hide();
     }
 
     adjustInputSize() {
         this.input.style.width = (this.input.value.length + 1) * 10 + 24 + 'px';
+    }
+
+    getItemRepo() {
+        this._itemRepo = this._itemRepo || new ItemRepo(this.data.pattern);
+        return this._itemRepo;
+    }
+
+    getQuery() {
+        return this.input.value.trim();
     }
 }

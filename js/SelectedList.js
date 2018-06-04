@@ -2,44 +2,33 @@ import {View} from 'gap-front-view';
 //import {fillObj} from './fillObj.js';
 
 export class SelectedList extends View {
-    static get tag() { return 'div'; }
-
-    render() {
-        this.ctn.addClass('selected-list');
+    template() {
+        return this.html`
+        <div
+            class="selected-list"
+            ref=${div => this.div = div}
+            on-click=${evt => this.click(evt)}
+            arr="items"
+            item-as="item"
+            item-key=${item => item.value}
+        >
+            ${() => this.html`
+                <span
+                    class="selected-item"
+                    bind-data-val="item.value"
+                >
+                    <input type="hidden" name="${this.data.name}" bind-value="item.value">
+                    $${'item.selected'}
+                    <a class="delete" href="javascript:;">x</a>
+                </span>
+            `}
+        </div>
+        `;
     }
 
-    startup() {
-        this.selectedDict = {};
-
-        this.ctn.on('click', (evt) => {
-            if (evt.target.className === 'delete') {
-                this.deleteItem(
-                    evt.target.parentNode.getAttribute('val')
-                );
-            }
-        });
-
-        this.exportApi();
-    }
-
-    exportApi() {
-        this.ctn.addItem = (item) => this.addItem(item);
-        this.ctn.deleteLast = () => this.deleteLast();
-    }
-
-    deleteLast() {
-        const lastElem = this.ctn.lastElementChild;
-        if (lastElem) {
-            const val = lastElem.getAttribute('val');
-            lastElem.remove();
-            delete(this.selectedDict[val]);
-        }
-    }
-
-    deleteItem(val) {
-        this.ctn.allElem(`[val="${val}"]`)
-            .forEach(elem => elem.remove());
-        delete(this.selectedDict[val]);
+    get selectedDict() {
+        this._selectedDict = this._selectedDict || {};
+        return this._selectedDict;
     }
 
     addItem(item) {
@@ -56,20 +45,34 @@ export class SelectedList extends View {
         }
 
         this.selectedDict[item.value] = item;
-        const selectedSpan = document.createElement('span');
-        selectedSpan.setAttribute('val', item.value);
+        this.data.items.add(item);
+    }
 
-        selectedSpan.className = 'selected-item';
-        selectedSpan.html`
-            <input type="hidden" name="${this.data.name}" value="${item.value}">
-            ${item.selected}
-            <a class="delete" href="javascript:;">x</a>
-        `;
-        this.ctn.appendChild(selectedSpan);
+
+    click(evt) {
+        if (evt.target.className === 'delete') {
+            this.deleteItem(
+                evt.target.parentNode.getAttribute('data-val')
+            );
+        }
+    }
+
+    deleteLast() {
+        const lastElem = this.div.lastElementChild;
+        if (lastElem) {
+            const val = lastElem.getAttribute('data-val');
+            this.deleteItem(val);
+        }
+    }
+
+    deleteItem(val) {
+        this.data.items.remove(
+            this._selectedDict[val]
+        );
     }
 
     clear() {
-        this.selectedDict = {};
-        this.ctn.innerHTML = '';
+        this._selectedDict = {};
+        this.data.items = [];
     }
 }

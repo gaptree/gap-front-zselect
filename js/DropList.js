@@ -1,55 +1,45 @@
 import {View} from 'gap-front-view';
-import {GapEvent} from 'gap-front-event';
+//import {transfer} from './lib/transfer';
 
 export class DropList extends View {
-    static get tag() { return 'div'; }
-
-    render() {
-        this.ctn.addClass('drop-wrap');
-        this.ctn.style.position = 'absolute';
-        this.ctn.innerHTML = '<ul></ul>';
-        this.ctn.hide();
-    }
-
-    startup() {
-        this.event = new GapEvent();
-
-        this.list = this.ctn.oneElem('ul');
-        this.reg();
-        this.api();
-    }
-
-    reg() {
-        this.ctn.on('click', (evt) => {
-            if (evt.target.hasClass('drop-item')) {
-                this.triggerSelect(evt.target.getAttribute('key'));
-            }
-        });
-    }
-
-    api() {
-        this.ctn.load = (itemArr) => this.load(itemArr);
-        this.ctn.onSelect = (handler) => this.onSelect(handler);
-        this.ctn.next = () => this.next();
-        this.ctn.prev = () => this.prev();
-        this.ctn.selectCurrent = () => this.selectCurrent();
-    }
-
-    onSelect(handler) {
-        this.event.on('select', handler);
-    }
-
-    load(itemArr) {
-        this.list.html`
-            ${itemArr.map(item => `
+    template() {
+        return this.html`
+        <div
+            ref=${div => this.div = div}
+            class="drop-wrap"
+            style="position: absolute; display: none"
+            on-click=${evt => this.click(evt)}
+        >
+            <ul
+                ref=${ul => this.list = ul}
+                arr="items"
+                item-as="item"
+                item-key=${item => item.key}
+            >
+            ${() => this.html`
                 <li>
-                    <a href="javascript:;" class="drop-item"
-                        key="${item.key}">
-                        ${item.content}
+                    <a
+                        href="javascript:;"
+                        class="drop-item"
+                        bind-key="item.key"
+                    >
+                        $${'item.content'}
                     </a>
                 </li>
-            `)}
+            `}
+            </ul>
+        </div>
         `;
+    }
+
+    click(evt) {
+        if (evt.target.hasClass('drop-item')) {
+            this.triggerSelect(evt.target.getAttribute('key'));
+        }
+    }
+
+    triggerSelect(key) {
+        this.trigger('select', key);
     }
 
     next() {
@@ -79,7 +69,14 @@ export class DropList extends View {
         }
     }
 
-    // protected function
+    show() {
+        this.div.show();
+    }
+
+    hide() {
+        this.div.hide();
+    }
+
     popActiveLi() {
         const activeLi = this.getActiveLi();
         if (activeLi) {
@@ -100,20 +97,16 @@ export class DropList extends View {
         return this.list.lastElementChild;
     }
 
-    triggerSelect(key) {
-        this.event.trigger('select', key);
-    }
-
     autoScroll(li) {
         const wrap = li.parentElement.parentElement;
         const min = wrap.scrollTop + li.offsetHeight;
         const max = wrap.scrollTop + wrap.offsetHeight - li.offsetHeight;
         if (li.offsetTop < min) {
-            wrap.scrollTop = li.offsetTop; 
+            wrap.scrollTop = li.offsetTop;
         }
 
         if (li.offsetTop > max) {
-            wrap.scrollTop = li.offsetTop - wrap.offsetHeight + li.offsetHeight; 
+            wrap.scrollTop = li.offsetTop - wrap.offsetHeight + li.offsetHeight;
         }
     }
 }
