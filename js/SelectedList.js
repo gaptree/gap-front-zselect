@@ -45,6 +45,10 @@ export class SelectedList extends View {
         }
 
         this.selectedDict[item.value] = item;
+        if (!this.data.items) {
+            this.data.items = [];
+        }
+
         this.data.items.add(item);
     }
 
@@ -66,7 +70,7 @@ export class SelectedList extends View {
     }
 
     deleteItem(val) {
-        this.data.items.remove(
+        this.data.items.removeElem(
             this._selectedDict[val]
         );
     }

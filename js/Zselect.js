@@ -51,13 +51,11 @@ export class Zselect extends View {
     }
 
     async querying() {
-        console.log('try querying');
         const query = this.getQuery();
         if (this.currentQuery === query) {
             return;
         }
         
-        console.log('querying', query);
         this.currentQuery = query;
         const response = this.handleQuery(query);
 
