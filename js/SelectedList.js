@@ -73,6 +73,7 @@ export class SelectedList extends View {
         this.data.items.removeElem(
             this._selectedDict[val]
         );
+        delete(this._selectedDict[val]);
     }
 
     clear() {
