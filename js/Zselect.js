@@ -105,7 +105,7 @@ export class Zselect extends View {
     focus() {
         this.adjustInputSize();
         this.querying();
-        //this.dropList.show();
+        this.dropList.show();
     }
 
     keyup() {
@@ -149,7 +149,7 @@ export class Zselect extends View {
         }
 
         if (evt.keyCode === KeyCode.delete) {
-            if (!this.getQuery()) {
+            if (!this.input.value) {
                 this.selectedList.deleteLast();
                 blockEvt(evt);
                 return false;
