@@ -17,7 +17,7 @@ export class SelectedList extends View {
                     class="selected-item"
                     bind-data-val="item.value"
                 >
-                    <input type="hidden" name="${this.data.name}" bind-value="item.value">
+                    <input type="hidden" name="${this.props.name}" bind-value="item.value">
                     $${'item.selected'}
                     <a class="delete" href="javascript:;">x</a>
                 </span>
@@ -68,7 +68,7 @@ export class SelectedList extends View {
             return;
         }
 
-        if (!this.data.isMulti) {
+        if (!this.props.isMulti) {
             this.clear();
         }
 

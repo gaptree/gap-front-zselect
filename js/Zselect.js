@@ -20,7 +20,7 @@ export class Zselect extends View {
         >
             <div class="selected-wrap">
                 <gap-view
-                    view=${new SelectedList(this.data)}
+                    view=${new SelectedList(this.props)}
                     ref=${view => this.selectedList = view}
                     bind="selectedList"
                     on-change=${() => this.trigger('change', this.getSelectedItems())}
@@ -68,7 +68,7 @@ export class Zselect extends View {
             items: this.items.map((item, index) => {
                 return {
                     key: 'k' + index,
-                    content: fillObj(this.data.pattern.content, item)
+                    content: fillObj(this.props.pattern.content, item)
                 };
             })
         });
@@ -78,10 +78,10 @@ export class Zselect extends View {
         const index = parseInt(key.substr(1));
         const item = this.items[index];
 
-        const selectedPattern = this.data.pattern.selected || this.data.pattern.content;
+        const selectedPattern = this.props.pattern.selected || this.props.pattern.content;
 
         this.selectedList.addItem({
-            value: fillObj(this.data.pattern.value, item),
+            value: fillObj(this.props.pattern.value, item),
             selected: fillObj(selectedPattern, item),
             key: key
         });
@@ -172,7 +172,7 @@ export class Zselect extends View {
     }
 
     getItemRepo() {
-        this._itemRepo = this._itemRepo || new ItemRepo(this.data.pattern);
+        this._itemRepo = this._itemRepo || new ItemRepo(this.props.pattern);
         return this._itemRepo;
     }
 
