@@ -31,25 +31,8 @@ export class SelectedList extends View {
         return this._selectedDict;
     }
 
-    addItem(item) {
-        if (!item.value) {
-            return;
-        }
-
-        if (this.selectedDict.hasOwnProperty(item.value)) {
-            return;
-        }
-
-        if (!this.data.isMulti) {
-            this.clear();
-        }
-
-        this.selectedDict[item.value] = item;
-        if (!this.data.items) {
-            this.data.items = [];
-        }
-
-        this.data.items.add(item);
+    getItems() {
+        return this.data.items;
     }
 
 
@@ -69,11 +52,41 @@ export class SelectedList extends View {
         }
     }
 
+    triggerChange() {
+        this.trigger(
+            'change', 
+            Object.values(this.selectedDict)
+        );
+    }
+
+    addItem(item) {
+        if (!item.value) {
+            return;
+        }
+
+        if (this.selectedDict.hasOwnProperty(item.value)) {
+            return;
+        }
+
+        if (!this.data.isMulti) {
+            this.clear();
+        }
+
+        this.selectedDict[item.value] = item;
+        if (!this.data.items) {
+            this.data.items = [];
+        }
+
+        this.data.items.add(item);
+        this.triggerChange();
+    }
+
     deleteItem(val) {
         this.data.items.removeElem(
             this._selectedDict[val]
         );
         delete(this._selectedDict[val]);
+        this.triggerChange();
     }
 
     clear() {

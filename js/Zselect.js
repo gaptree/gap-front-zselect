@@ -23,6 +23,7 @@ export class Zselect extends View {
                     view=${new SelectedList(this.data)}
                     ref=${view => this.selectedList = view}
                     bind="selectedList"
+                    on-change=${items => this.trigger('change', items)}
                 ></gap-view>
                 <input
                     type="text"
@@ -89,6 +90,11 @@ export class Zselect extends View {
         this.input.setVal('');
         this.currentQuery = null;
         this.input.blur();
+
+        this.trigger(
+            'select',
+            item
+        );
     }
 
     mousedown(evt) {
