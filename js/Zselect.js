@@ -179,4 +179,8 @@ export class Zselect extends View {
     getQuery() {
         return this.input.value.trim();
     }
+
+    getSelectedItems() {
+        return this.selectedList.getItems();
+    }
 }

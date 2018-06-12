@@ -32,7 +32,7 @@ export class SelectedList extends View {
     }
 
     getItems() {
-        return this.data.items;
+        return Object.values(this.selectedDict);
     }
 
 
@@ -55,7 +55,7 @@ export class SelectedList extends View {
     triggerChange() {
         this.trigger(
             'change', 
-            Object.values(this.selectedDict)
+            this.getItems()
         );
     }
 
