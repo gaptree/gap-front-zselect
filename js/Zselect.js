@@ -23,7 +23,7 @@ export class Zselect extends View {
                     view=${new SelectedList(this.data)}
                     ref=${view => this.selectedList = view}
                     bind="selectedList"
-                    on-change=${items => this.trigger('change', items)}
+                    on-change=${() => this.trigger('change', this.getSelectedItems())}
                 ></gap-view>
                 <input
                     type="text"
@@ -181,6 +181,13 @@ export class Zselect extends View {
     }
 
     getSelectedItems() {
-        return this.selectedList.getItems();
+        return this.selectedList.getItems().map(item => {
+            const index = parseInt(item.key.substr(1));
+            if (isNaN(index)) {
+                throw new Error(item.key);
+            }
+
+            return this.items[index];
+        });
     }
 }
