@@ -77,12 +77,12 @@ export class SelectedList extends View {
             this.data.items = [];
         }
 
-        this.data.items.add(item);
+        this.data.items.push(item);
         this.triggerChange();
     }
 
     deleteItem(val) {
-        this.data.items.removeElem(
+        this.data.items.delete(
             this._selectedDict[val]
         );
         delete(this._selectedDict[val]);
