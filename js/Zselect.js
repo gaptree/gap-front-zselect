@@ -190,4 +190,9 @@ export class Zselect extends View {
             return this.items[index];
         });
     }
+
+    clear() {
+        this.currentQuery = null;
+        this.selectedList.clear();
+    }
 }
