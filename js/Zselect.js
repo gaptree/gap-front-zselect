@@ -22,8 +22,8 @@ export class Zselect extends View {
                 <gap-view
                     view=${new SelectedList(this.props)}
                     ref=${view => this.selectedList = view}
-                    bind="selectedList"
                     on-change=${() => this.trigger('change', this.getSelectedItems())}
+                    bind-items="selectedItems"
                 ></gap-view>
                 <input
                     type="text"
@@ -45,6 +45,11 @@ export class Zselect extends View {
             ></gap-view>
         </div>
         `;
+    }
+
+    update(data) {
+        super.update(data);
+        this.adjustInputSize();
     }
 
     onQuery(handle) {
@@ -78,13 +83,7 @@ export class Zselect extends View {
         const index = parseInt(key.substr(1));
         const item = this.items[index];
 
-        const selectedPattern = this.props.pattern.selected || this.props.pattern.content;
-
-        this.selectedList.addItem({
-            value: fillObj(this.props.pattern.value, item),
-            selected: fillObj(selectedPattern, item),
-            key: key
-        });
+        this.selectedList.addItem(item);
 
         this.dropList.hide();
         this.input.setVal('');
@@ -181,6 +180,8 @@ export class Zselect extends View {
     }
 
     getSelectedItems() {
+        return this.selectedList.getItems();
+        /*
         return this.selectedList.getItems().map(item => {
             const index = parseInt(item.key.substr(1));
             if (isNaN(index)) {
@@ -189,6 +190,7 @@ export class Zselect extends View {
 
             return this.items[index];
         });
+        */
     }
 
     clear() {

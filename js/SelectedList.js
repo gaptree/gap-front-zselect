@@ -1,5 +1,5 @@
 import {View} from 'gap-front-view';
-//import {fillObj} from './fillObj.js';
+import {fillObj} from './fillObj.js';
 
 export class SelectedList extends View {
     template() {
@@ -10,15 +10,18 @@ export class SelectedList extends View {
             on-click=${evt => this.click(evt)}
             arr="items"
             item-as="item"
-            item-key=${item => item.value}
+            item-key=${item => this.getItemValue(item)}
         >
             ${() => this.html`
                 <span
                     class="selected-item"
-                    bind-data-val="item.value"
+                    bind-data-val=${{item: item => this.getItemValue(item)}}
                 >
-                    <input type="hidden" name="${this.props.name}" bind-value="item.value">
-                    $${'item.selected'}
+                    <input
+                        type="hidden"
+                        name="${this.props.name}"
+                        bind-value=${{item: item => this.getItemValue(item)}}>
+                    $${{item: item => this.getItemSelected(item)}}
                     <a class="delete" href="javascript:;">x</a>
                 </span>
             `}
@@ -32,7 +35,12 @@ export class SelectedList extends View {
     }
 
     getItems() {
-        return Object.values(this.selectedDict);
+        return this.data.items.filter(item => {
+            if (item) {
+                return item;
+            }
+        });
+        //return Object.values(this.selectedDict);
     }
 
 
@@ -59,12 +67,37 @@ export class SelectedList extends View {
         );
     }
 
+    getItemValue(item) {
+        return fillObj(this.props.pattern.value, item);
+    }
+
+    getItemSelected(item) {
+        const selectedPattern = this.props.pattern.selected || this.props.pattern.content;
+        return fillObj(selectedPattern, item);
+    }
+
     addItem(item) {
-        if (!item.value) {
+        const value = this.getItemValue(item);
+        if (this.selectedDict.hasOwnProperty(value)) {
+            return;
+        }
+        this.selectedDict[value] = item;
+        if (!this.props.isMulti) {
+            this.clear();
+        }
+        if (!this.data.items) {
+            this.data.items = [];
+        }
+        this.data.items.push(item);
+        this.triggerChange();
+        /*
+        const value = this.getItemValue(item);
+        item.value = value;
+        if (!value) {
             return;
         }
 
-        if (this.selectedDict.hasOwnProperty(item.value)) {
+        if (this.selectedDict.hasOwnProperty(value)) {
             return;
         }
 
@@ -72,21 +105,27 @@ export class SelectedList extends View {
             this.clear();
         }
 
-        this.selectedDict[item.value] = item;
+        this.selectedDict[value] = item;
         if (!this.data.items) {
             this.data.items = [];
         }
 
         this.data.items.push(item);
         this.triggerChange();
+        */
     }
 
     deleteItem(val) {
+        this.data.items.deleteByKey(val);
+        delete(this._selectedDict[val]);
+        this.triggerChange();
+        /*
         this.data.items.delete(
             this._selectedDict[val]
         );
         delete(this._selectedDict[val]);
         this.triggerChange();
+        */
     }
 
     clear() {
