@@ -35,6 +35,10 @@ export class SelectedList extends View {
     }
 
     getItems() {
+        if (!this.data.items) {
+            return [];
+        }
+
         return this.data.items.filter(item => {
             if (item) {
                 return item;
