@@ -38,7 +38,6 @@ export class SelectedList extends View {
         if (!this.data.items) {
             return [];
         }
-
         return this.data.items.filter(item => {
             if (item) {
                 return item;
@@ -121,15 +120,10 @@ export class SelectedList extends View {
 
     deleteItem(val) {
         this.data.items.deleteByKey(val);
-        delete(this._selectedDict[val]);
+        if (this._selectedDict) {
+            delete(this._selectedDict[val]);
+        }
         this.triggerChange();
-        /*
-        this.data.items.delete(
-            this._selectedDict[val]
-        );
-        delete(this._selectedDict[val]);
-        this.triggerChange();
-        */
     }
 
     clear() {
