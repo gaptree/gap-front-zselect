@@ -15,13 +15,13 @@ export class SelectedList extends View {
             ${() => this.html`
                 <span
                     class="selected-item"
-                    bind-data-val=${{item: item => this.getItemValue(item)}}
+                    bind-data-val=${this.filter({item: item => this.getItemValue(item)})}
                 >
                     <input
                         type="hidden"
                         name="${this.props.name}"
-                        bind-value=${{item: item => this.getItemValue(item)}}>
-                    $${{item: item => this.getItemSelected(item)}}
+                        bind-value=${this.filter({item: item => this.getItemValue(item)})}>
+                    $${this.filter({item: item => this.getItemSelected(item)})}
                     <a class="delete" href="javascript:;">x</a>
                 </span>
             `}
