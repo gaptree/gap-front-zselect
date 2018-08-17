@@ -1782,9 +1782,9 @@ gap-front-event@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/gap-front-event/-/gap-front-event-2.0.0.tgz#1afd71f5bbb0d94a4efd350424a708cd8b7b4f52"
 
-gap-front-view@^2.1.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/gap-front-view/-/gap-front-view-2.4.0.tgz#6ca60ee9cc78f4d349b9dcef085c006165b24f3d"
+gap-front-view@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/gap-front-view/-/gap-front-view-3.0.8.tgz#493055d8c93018c905686e986ebb3fbedc5fd08b"
   dependencies:
     gap-front-event "^2.0.0"
     gap-front-web "^1.2.11"
