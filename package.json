@@ -1,6 +1,6 @@
 {
   "name": "gap-front-zselect",
-  "version": "3.1.5",
+  "version": "4.0.0",
   "keywords": [
     "Gap",
     "zselect"
@@ -20,7 +20,7 @@
   "description": "",
   "dependencies": {
     "gap-front-event": "^2.0.0",
-    "gap-front-view": "^2.1.0",
+    "gap-front-view": "^3.0.8",
     "gap-front-web": "^1.2.11"
   },
   "devDependencies": {
