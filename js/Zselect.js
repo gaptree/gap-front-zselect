@@ -29,7 +29,7 @@ export class Zselect extends View {
                     type="text"
                     class="zinput"
                     ref=${input => this.input = input}
-                    on-focus=${() => this.focus()}
+                    on-focus=${() => this.inputFocused()}
                     on-blur=${() => this.blur()}
                     on-keyup=${evt => this.keyup(evt)}
                     on-keydown=${(evt) => this.keydown(evt)}
@@ -96,6 +96,10 @@ export class Zselect extends View {
         );
     }
 
+    focus() {
+        this.input.focus();
+    }
+
     mousedown(evt) {
         if (evt.target === this.input) {
             return;
@@ -107,7 +111,7 @@ export class Zselect extends View {
         return false;
     }
 
-    focus() {
+    inputFocused() {
         this.adjustInputSize();
         this.querying();
         this.dropList.show();
