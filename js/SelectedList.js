@@ -119,9 +119,10 @@ export class SelectedList extends View {
     }
 
     deleteItem(val) {
-        this.data.items.deleteByKey(val);
-        if (this._selectedDict) {
-            delete(this._selectedDict[val]);
+        const selectedItem = this.selectedDict[val] || null;
+        if (selectedItem) {
+            delete(this.selectedDict[val]);
+            this.data.items.delete(selectedItem);
         }
         this.triggerChange();
     }
