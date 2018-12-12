@@ -84,13 +84,13 @@ export class SelectedList extends View {
         if (this.selectedDict.hasOwnProperty(value)) {
             return;
         }
-        this.selectedDict[value] = item;
         if (!this.props.isMulti) {
             this.clear();
         }
         if (!this.data.items) {
             this.data.items = [];
         }
+        this.selectedDict[value] = item;
         this.data.items.push(item);
         this.triggerChange();
         /*
