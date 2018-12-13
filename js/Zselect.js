@@ -12,6 +12,11 @@ const KeyCode = {
     delete: 8
 };
 
+const Event = {
+    change: 'change',
+    select: 'select'
+};
+
 export class Zselect extends View {
     template() {
         return this.html`
@@ -22,7 +27,7 @@ export class Zselect extends View {
                 <gap-view
                     view=${new SelectedList(this.props)}
                     ref=${view => this.selectedList = view}
-                    on-change=${() => this.trigger('change', this.getSelectedItems())}
+                    on-change=${() => this.trigger(Event.change, this.getSelectedItems())}
                     bind-items="selectedItems"
                 ></gap-view>
                 <input
@@ -54,6 +59,14 @@ export class Zselect extends View {
 
     onQuery(handle) {
         this.handleQuery = handle;
+    }
+
+    onChange(handle) {
+        this.on(Event.change, handle);
+    }
+
+    onSelect(handle) {
+        this.on(Event.select, handle);
     }
 
     async querying() {
@@ -91,7 +104,7 @@ export class Zselect extends View {
         this.input.blur();
 
         this.trigger(
-            'select',
+            Event.select,
             item
         );
     }
